@@ -1,98 +1,134 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import MetricCard from '@/components/MetricCard';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  // Mock data for dashboard metrics
+  const metrics = {
+    activeSIMs: 3,
+    messagesToday: 128,
+    payout: '$45.75',
+    connectionStatus: 'Online',
+  };
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
+  const statusCards = [
+    {
+      title: "Active SIMs",
+      value: metrics.activeSIMs,
+      subtitle: "Connected devices",
+      icon: "📱",
+      color: "#34C759"
+    },
+    {
+      title: "Messages Today",
+      value: metrics.messagesToday,
+      subtitle: "Sent & received",
+      icon: "💬",
+      color: "#007AFF"
+    },
+    {
+      title: "Current Payout",
+      value: metrics.payout,
+      subtitle: "This month",
+      icon: "💰",
+      color: "#AF52DE"
+    },
+    {
+      title: "Connection",
+      value: metrics.connectionStatus,
+      subtitle: "Status",
+      icon: "📶",
+      color: "#FF9500"
+    }
+  ];
+
+  return (
+    <ScrollView style={styles.container}>
+      <ThemedView style={styles.header}>
+        <ThemedText type="title" style={styles.title}>Dashboard</ThemedText>
+        <ThemedText type="default" style={styles.subtitle}>
+          Monitor your SIM activity and earnings
         </ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
+
+      <ThemedView style={styles.metricsContainer}>
+        {statusCards.map((card, index) => (
+          <View key={index}>
+            <MetricCard 
+              title={card.title}
+              value={card.value}
+              subtitle={card.subtitle}
+              icon={card.icon}
+            />
+          </View>
+        ))}
       </ThemedView>
-    </ParallaxScrollView>
+
+      <ThemedView style={styles.quickStatsContainer}>
+        <ThemedText type="subtitle" style={styles.sectionTitle}>Quick Stats</ThemedText>
+        
+        <ThemedView style={styles.statRow}>
+          <ThemedText>Total Messages: </ThemedText>
+          <ThemedText type="defaultSemiBold">1,248</ThemedText>
+        </ThemedView>
+        
+        <ThemedView style={styles.statRow}>
+          <ThemedText>Active SIMs: </ThemedText>
+          <ThemedText type="defaultSemiBold">5</ThemedText>
+        </ThemedView>
+        
+        <ThemedView style={styles.statRow}>
+          <ThemedText>Earnings: </ThemedText>
+          <ThemedText type="defaultSemiBold">$128.50</ThemedText>
+        </ThemedView>
+      </ThemedView>
+
+      <ThemedView style={styles.incomeContainer}>
+        <ThemedText type="subtitle" style={styles.sectionTitle}>Recent Activity</ThemedText>
+        <ThemedText type="default">No recent activity to display</ThemedText>
+      </ThemedView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: 'transparent',
   },
-  stepContainer: {
-    gap: 8,
+  header: {
+    padding: 20,
+    paddingTop: Platform.OS === 'android' ? 50 : 60,
+  },
+  title: {
+    fontSize: 28,
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  subtitle: {
+    fontSize: 16,
+    opacity: 0.8,
+  },
+  metricsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    paddingHorizontal: 10,
+  },
+  quickStatsContainer: {
+    padding: 20,
+    marginTop: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    marginBottom: 15,
+  },
+  statRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 5,
+  },
+  incomeContainer: {
+    padding: 20,
   },
 });

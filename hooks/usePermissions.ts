@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Alert } from "react-native";
 import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
 
+type PermissionStatus = "granted" | "limited";
+
 export const usePermissions = () => {
   const [permissions, setPermissions] = useState({
     sms: false,
@@ -36,20 +38,30 @@ export const usePermissions = () => {
       ]);
 
       const allSmsGranted =
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(readSmsStatus) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(receiveSmsStatus) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(sendSmsStatus);
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+          readSmsStatus as PermissionStatus
+        ) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+          receiveSmsStatus as PermissionStatus
+        ) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+          sendSmsStatus as PermissionStatus
+        );
 
       const allPhoneGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-        phoneStateStatus
+        phoneStateStatus as PermissionStatus
       );
 
       const allStorageGranted =
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(readStorageStatus) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(writeStorageStatus);
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+          readStorageStatus as PermissionStatus
+        ) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+          writeStorageStatus as PermissionStatus
+        );
 
       const contactsGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-        contactsStatus
+        contactsStatus as PermissionStatus
       );
 
       setPermissions({
@@ -94,20 +106,30 @@ export const usePermissions = () => {
       const contactsStatus = await check(PERMISSIONS.ANDROID.READ_CONTACTS);
 
       const allSmsGranted =
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(readSmsStatus) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(receiveSmsStatus) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(sendSmsStatus);
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+          readSmsStatus as PermissionStatus
+        ) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+          receiveSmsStatus as PermissionStatus
+        ) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+          sendSmsStatus as PermissionStatus
+        );
 
       const allPhoneGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-        phoneStateStatus
+        phoneStateStatus as PermissionStatus
       );
 
       const allStorageGranted =
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(readStorageStatus) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(writeStorageStatus);
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+          readStorageStatus as PermissionStatus
+        ) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+          writeStorageStatus as PermissionStatus
+        );
 
       const contactsGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-        contactsStatus
+        contactsStatus as PermissionStatus
       );
 
       setPermissions({

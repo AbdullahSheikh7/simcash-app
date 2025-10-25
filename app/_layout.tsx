@@ -2,6 +2,7 @@ import { SMSServiceProvider } from "@/contexts/SMSContext";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useSocket } from "@/hooks/useWebSocket";
 import { ReduxProvider } from "@/providers/ReduxProvider";
 import {
   DarkTheme,
@@ -20,6 +21,7 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const socket = useSocket();
   const { permissions, loading, checkPermissions, requestPermissions } =
     usePermissions();
   const [isChecking, setIsChecking] = useState(true);

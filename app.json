@@ -1,16 +1,13 @@
 {
   "expo": {
     "name": "frontend",
-    "slug": "frontend",
+    "slug": "simcash",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "frontend",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
@@ -28,8 +25,18 @@
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
         "ACCESS_NETWORK_STATE",
-        "READ_PHONE_NUMBERS"
-      ]
+        "READ_PHONE_NUMBERS",
+        "READ_SMS",
+        "SEND_SMS",
+        "RECEIVE_SMS",
+        "READ_PHONE_STATE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_NETWORK_STATE",
+        "READ_PHONE_NUMBERS",
+        "READ_CONTACTS"
+      ],
+      "package": "com.abdullahs.frontend"
     },
     "web": {
       "output": "static",
@@ -52,13 +59,29 @@
       [
         "react-native-permissions",
         {
-          "iosPermissions": ["AppTrackingTransparency", "Camera", "LocationWhenInUse", "PhotoLibrary", "Microphone"]
+          "iosPermissions": [
+            "AppTrackingTransparency",
+            "Camera",
+            "LocationWhenInUse",
+            "PhotoLibrary",
+            "Microphone"
+          ]
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b04e4b9a-5067-4b60-8fc4-9ab82150c279"
+      }
+    },
+    "owner": "areeb2345",
+    "ios": {
+      "bundleIdentifier": "com.abdullahs.frontend"
     }
   }
 }

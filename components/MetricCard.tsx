@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import React from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
 
 interface MetricCardProps {
   title: string;
@@ -11,16 +11,12 @@ interface MetricCardProps {
   color?: string;
 }
 
-const MetricCard: React.FC<MetricCardProps> = ({ 
-  title, 
-  value, 
-  subtitle, 
-  icon = '📊' 
-}) => {
+const { width } = Dimensions.get("window");
+
+const MetricCard: React.FC<MetricCardProps> = ({ title, value, subtitle }) => {
   return (
     <ThemedView style={styles.card}>
       <View style={styles.header}>
-        <ThemedText style={styles.icon}>{icon}</ThemedText>
         <ThemedText type="default" style={styles.title}>
           {title}
         </ThemedText>
@@ -39,15 +35,16 @@ const MetricCard: React.FC<MetricCardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'rgba(0, 122, 255, 0.1)',
+    backgroundColor: "rgba(0, 122, 255, 0.1)",
     padding: 16,
     borderRadius: 12,
     minWidth: 150,
+    maxWidth: width / 2.5,
     margin: 8,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 8,
   },
   icon: {
@@ -60,7 +57,7 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   subtitle: {

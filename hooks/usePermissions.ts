@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
-import { Alert } from 'react-native';
-import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { useState, useEffect } from "react";
+import { Alert } from "react-native";
+import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
 
 export const usePermissions = () => {
   const [permissions, setPermissions] = useState({
     sms: false,
     phoneState: false,
     storage: false,
+    contacts: false,
   });
 
   const [loading, setLoading] = useState(true);
@@ -14,40 +15,56 @@ export const usePermissions = () => {
   const requestPermissions = async () => {
     try {
       // Request SMS permissions
-      const [readSmsStatus, receiveSmsStatus, sendSmsStatus] = await Promise.all([
-        request(PERMISSIONS.ANDROID.READ_SMS),
-        request(PERMISSIONS.ANDROID.RECEIVE_SMS),
-        request(PERMISSIONS.ANDROID.SEND_SMS),
-      ]);
+      const [readSmsStatus, receiveSmsStatus, sendSmsStatus] =
+        await Promise.all([
+          request(PERMISSIONS.ANDROID.READ_SMS),
+          request(PERMISSIONS.ANDROID.RECEIVE_SMS),
+          request(PERMISSIONS.ANDROID.SEND_SMS),
+        ]);
 
       // Request phone state permissions
-      const phoneStateStatus = await request(PERMISSIONS.ANDROID.READ_PHONE_STATE);
+      const phoneStateStatus = await request(
+        PERMISSIONS.ANDROID.READ_PHONE_STATE
+      );
 
       // Request storage permissions
+      const contactsStatus = await request(PERMISSIONS.ANDROID.READ_CONTACTS);
+
       const [readStorageStatus, writeStorageStatus] = await Promise.all([
         request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE),
         request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE),
       ]);
 
-      const allSmsGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(readSmsStatus) &&
-                           [RESULTS.GRANTED, RESULTS.LIMITED].includes(receiveSmsStatus) &&
-                           [RESULTS.GRANTED, RESULTS.LIMITED].includes(sendSmsStatus);
+      const allSmsGranted =
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(readSmsStatus) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(receiveSmsStatus) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(sendSmsStatus);
 
-      const allPhoneGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(phoneStateStatus);
+      const allPhoneGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+        phoneStateStatus
+      );
 
-      const allStorageGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(readStorageStatus) &&
-                                [RESULTS.GRANTED, RESULTS.LIMITED].includes(writeStorageStatus);
+      const allStorageGranted =
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(readStorageStatus) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(writeStorageStatus);
+
+      const contactsGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+        contactsStatus
+      );
 
       setPermissions({
         sms: allSmsGranted,
         phoneState: allPhoneGranted,
         storage: allStorageGranted,
+        contacts: contactsGranted,
       });
 
       setLoading(false);
-      return allSmsGranted && allPhoneGranted && allStorageGranted;
+      return (
+        allSmsGranted && allPhoneGranted && allStorageGranted && contactsGranted
+      );
     } catch (error) {
-      console.error('Error requesting permissions:', error);
+      console.error("Error requesting permissions:", error);
       setLoading(false);
       return false;
     }
@@ -56,14 +73,17 @@ export const usePermissions = () => {
   const checkPermissions = async () => {
     try {
       // Check SMS permissions
-      const [readSmsStatus, receiveSmsStatus, sendSmsStatus] = await Promise.all([
-        check(PERMISSIONS.ANDROID.READ_SMS),
-        check(PERMISSIONS.ANDROID.RECEIVE_SMS),
-        check(PERMISSIONS.ANDROID.SEND_SMS),
-      ]);
+      const [readSmsStatus, receiveSmsStatus, sendSmsStatus] =
+        await Promise.all([
+          check(PERMISSIONS.ANDROID.READ_SMS),
+          check(PERMISSIONS.ANDROID.RECEIVE_SMS),
+          check(PERMISSIONS.ANDROID.SEND_SMS),
+        ]);
 
       // Check phone state permissions
-      const phoneStateStatus = await check(PERMISSIONS.ANDROID.READ_PHONE_STATE);
+      const phoneStateStatus = await check(
+        PERMISSIONS.ANDROID.READ_PHONE_STATE
+      );
 
       // Check storage permissions
       const [readStorageStatus, writeStorageStatus] = await Promise.all([
@@ -71,25 +91,38 @@ export const usePermissions = () => {
         check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE),
       ]);
 
-      const allSmsGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(readSmsStatus) &&
-                           [RESULTS.GRANTED, RESULTS.LIMITED].includes(receiveSmsStatus) &&
-                           [RESULTS.GRANTED, RESULTS.LIMITED].includes(sendSmsStatus);
+      const contactsStatus = await check(PERMISSIONS.ANDROID.READ_CONTACTS);
 
-      const allPhoneGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(phoneStateStatus);
+      const allSmsGranted =
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(readSmsStatus) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(receiveSmsStatus) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(sendSmsStatus);
 
-      const allStorageGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(readStorageStatus) &&
-                                [RESULTS.GRANTED, RESULTS.LIMITED].includes(writeStorageStatus);
+      const allPhoneGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+        phoneStateStatus
+      );
+
+      const allStorageGranted =
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(readStorageStatus) &&
+        [RESULTS.GRANTED, RESULTS.LIMITED].includes(writeStorageStatus);
+
+      const contactsGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
+        contactsStatus
+      );
 
       setPermissions({
         sms: allSmsGranted,
         phoneState: allPhoneGranted,
         storage: allStorageGranted,
+        contacts: contactsGranted,
       });
 
       setLoading(false);
-      return allSmsGranted && allPhoneGranted && allStorageGranted;
+      return (
+        allSmsGranted && allPhoneGranted && allStorageGranted && contactsGranted
+      );
     } catch (error) {
-      console.error('Error checking permissions:', error);
+      console.error("Error checking permissions:", error);
       setLoading(false);
       return false;
     }
@@ -97,11 +130,11 @@ export const usePermissions = () => {
 
   const showPermissionDialog = () => {
     Alert.alert(
-      'Permissions Required',
-      'SimCash requires SMS and phone permissions to function properly. These permissions are needed to send and receive SMS messages through your SIM cards.',
+      "Permissions Required",
+      "SimCash requires SMS and phone permissions to function properly. These permissions are needed to send and receive SMS messages through your SIM cards.",
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Settings', onPress: () => {} }
+        { text: "Cancel", style: "cancel" },
+        { text: "Settings", onPress: () => {} },
       ]
     );
   };

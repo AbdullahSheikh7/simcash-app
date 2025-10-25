@@ -1,5 +1,3 @@
-import { SMSServiceProvider } from "@/contexts/SMSContext";
-import { WebSocketProvider } from "@/contexts/WebSocketContext";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { usePermissions } from "@/hooks/usePermissions";
 import { useSocket } from "@/hooks/useWebSocket";

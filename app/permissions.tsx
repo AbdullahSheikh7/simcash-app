@@ -15,8 +15,6 @@ const PermissionsScreen = () => {
     }
   };
 
-  
-
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.content}>
@@ -24,7 +22,9 @@ const PermissionsScreen = () => {
           Allow Permissions
         </ThemedText>
         <ThemedText style={styles.description}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. We also need to access your contacts.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. We also
+          need to access your contacts.
         </ThemedText>
         <TouchableOpacity
           style={styles.continueButton}
@@ -34,7 +34,6 @@ const PermissionsScreen = () => {
             Grant Permissions
           </ThemedText>
         </TouchableOpacity>
-        
       </ThemedView>
     </ThemedView>
   );
@@ -73,7 +72,7 @@ const styles = StyleSheet.create({
     width: "80%",
     alignItems: "center",
   },
-  
+
   buttonText: {
     color: "white",
     fontSize: 16,

@@ -1,7 +1,14 @@
 import MetricCard from "@/components/MetricCard";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { router } from "expo-router";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function HomeScreen() {
   // Mock data for dashboard metrics
@@ -53,7 +60,6 @@ export default function HomeScreen() {
           Monitor your SIM activity and earnings
         </ThemedText>
       </ThemedView>
-
       <ScrollView>
         <ThemedView style={styles.metricsContainer}>
           {statusCards.map((card, index) => (

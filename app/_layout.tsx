@@ -1,6 +1,7 @@
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { usePermissions } from "@/hooks/usePermissions";
 import { ReduxProvider } from "@/providers/ReduxProvider";
+import NativeLocalStorage from "@/specs/NativeLocalStorage";
 import {
   DarkTheme,
   DefaultTheme,
@@ -17,6 +18,7 @@ export default function RootLayout() {
   const { permissions, loading, checkPermissions, requestPermissions } =
     usePermissions();
   const [isChecking, setIsChecking] = useState(true);
+  // const { HelloModule } = NativeModules;
 
   // useEffect(() => {
   //   const checkInitialPermissions = async () => {
@@ -38,6 +40,10 @@ export default function RootLayout() {
   //   permissions.sms && permissions.phoneState && permissions.contacts;
 
   // const initialRouteName = hasAllPermissions ? "(tabs)/index" : "onboarding";
+
+  useEffect(() => {
+    NativeLocalStorage.sayHello("Abdullah");
+  }, []);
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>

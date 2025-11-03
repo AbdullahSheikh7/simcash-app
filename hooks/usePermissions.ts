@@ -1,179 +1,119 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Alert } from "react-native";
-import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
+import { check, request, RESULTS, PERMISSIONS } from "react-native-permissions";
+import { NativeModules } from "react-native";
 
-type PermissionStatus = "granted" | "limited";
+const { DefaultSmsModule } = NativeModules; // 👈 from your Kotlin native module
+
+type PermissionState = {
+  sms: boolean;
+  phone: boolean;
+  contacts: boolean;
+  isDefault: boolean;
+};
 
 export const usePermissions = () => {
-  const [permissions, setPermissions] = useState({
+  const [permissions, setPermissions] = useState<PermissionState>({
     sms: false,
-    phoneState: false,
-    storage: false,
+    phone: false,
     contacts: false,
+    isDefault: false,
   });
 
   const [loading, setLoading] = useState(true);
 
-  const requestPermissions = async () => {
+  // 🔹 Check all permissions & default app status
+  const checkPermissions = async (): Promise<boolean> => {
     try {
-      // Request SMS permissions
-      const [readSmsStatus, receiveSmsStatus, sendSmsStatus] =
-        await Promise.all([
-          request(PERMISSIONS.ANDROID.READ_SMS),
-          request(PERMISSIONS.ANDROID.RECEIVE_SMS),
-          request(PERMISSIONS.ANDROID.SEND_SMS),
-        ]);
-
-      // Request phone state permissions
-      const phoneStateStatus = await request(
-        PERMISSIONS.ANDROID.READ_PHONE_STATE
-      );
-
-      // Request storage permissions
-      const contactsStatus = await request(PERMISSIONS.ANDROID.READ_CONTACTS);
-
-      const [readStorageStatus, writeStorageStatus] = await Promise.all([
-        request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE),
-        request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE),
+      const [readSms, receiveSms, sendSms] = await Promise.all([
+        check(PERMISSIONS.ANDROID.READ_SMS),
+        check(PERMISSIONS.ANDROID.RECEIVE_SMS),
+        check(PERMISSIONS.ANDROID.SEND_SMS),
       ]);
+      const phone = await check(PERMISSIONS.ANDROID.READ_PHONE_STATE);
+      const contacts = await check(PERMISSIONS.ANDROID.READ_CONTACTS);
+      // const isDefault = await DefaultSmsModule.isDefaultSmsApp();
+      const isDefault = false;
 
-      const allSmsGranted =
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-          readSmsStatus as PermissionStatus
-        ) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-          receiveSmsStatus as PermissionStatus
-        ) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-          sendSmsStatus as PermissionStatus
-        );
-
-      const allPhoneGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-        phoneStateStatus as PermissionStatus
+      const smsGranted = [readSms, receiveSms, sendSms].every(
+        (s) => s === RESULTS.GRANTED || s === RESULTS.LIMITED
       );
-
-      const allStorageGranted =
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-          readStorageStatus as PermissionStatus
-        ) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-          writeStorageStatus as PermissionStatus
-        );
-
-      const contactsGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-        contactsStatus as PermissionStatus
-      );
+      const phoneGranted =
+        phone === RESULTS.GRANTED || phone === RESULTS.LIMITED;
+      const contactsGranted =
+        contacts === RESULTS.GRANTED || contacts === RESULTS.LIMITED;
 
       setPermissions({
-        sms: allSmsGranted,
-        phoneState: allPhoneGranted,
-        storage: allStorageGranted,
+        sms: smsGranted,
+        phone: phoneGranted,
         contacts: contactsGranted,
+        isDefault,
       });
-
       setLoading(false);
-      return (
-        allSmsGranted && allPhoneGranted && allStorageGranted && contactsGranted
-      );
-    } catch (error) {
-      console.error("Error requesting permissions:", error);
+
+      return smsGranted && phoneGranted && contactsGranted && isDefault;
+    } catch (err) {
+      console.error("Permission check failed:", err);
       setLoading(false);
       return false;
     }
   };
 
-  const checkPermissions = async () => {
+  // 🔹 Request all permissions + trigger default app dialog
+  const requestPermissions = async (): Promise<boolean> => {
     try {
-      // Check SMS permissions
-      const [readSmsStatus, receiveSmsStatus, sendSmsStatus] =
-        await Promise.all([
-          check(PERMISSIONS.ANDROID.READ_SMS),
-          check(PERMISSIONS.ANDROID.RECEIVE_SMS),
-          check(PERMISSIONS.ANDROID.SEND_SMS),
-        ]);
-
-      // Check phone state permissions
-      const phoneStateStatus = await check(
-        PERMISSIONS.ANDROID.READ_PHONE_STATE
-      );
-
-      // Check storage permissions
-      const [readStorageStatus, writeStorageStatus] = await Promise.all([
-        check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE),
-        check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE),
+      const [readSms, receiveSms, sendSms] = await Promise.all([
+        request(PERMISSIONS.ANDROID.READ_SMS),
+        request(PERMISSIONS.ANDROID.RECEIVE_SMS),
+        request(PERMISSIONS.ANDROID.SEND_SMS),
       ]);
+      const phone = await request(PERMISSIONS.ANDROID.READ_PHONE_STATE);
+      const contacts = await request(PERMISSIONS.ANDROID.READ_CONTACTS);
 
-      const contactsStatus = await check(PERMISSIONS.ANDROID.READ_CONTACTS);
-
-      const allSmsGranted =
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-          readSmsStatus as PermissionStatus
-        ) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-          receiveSmsStatus as PermissionStatus
-        ) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-          sendSmsStatus as PermissionStatus
-        );
-
-      const allPhoneGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-        phoneStateStatus as PermissionStatus
+      const smsGranted = [readSms, receiveSms, sendSms].every(
+        (s) => s === RESULTS.GRANTED || s === RESULTS.LIMITED
       );
+      const phoneGranted =
+        phone === RESULTS.GRANTED || phone === RESULTS.LIMITED;
+      const contactsGranted =
+        contacts === RESULTS.GRANTED || contacts === RESULTS.LIMITED;
 
-      const allStorageGranted =
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-          readStorageStatus as PermissionStatus
-        ) &&
-        [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-          writeStorageStatus as PermissionStatus
-        );
-
-      const contactsGranted = [RESULTS.GRANTED, RESULTS.LIMITED].includes(
-        contactsStatus as PermissionStatus
-      );
+      // 👇 Trigger default SMS app dialog from Kotlin native module
+      const isDefault = await DefaultSmsModule.requestDefaultSmsApp();
 
       setPermissions({
-        sms: allSmsGranted,
-        phoneState: allPhoneGranted,
-        storage: allStorageGranted,
+        sms: smsGranted,
+        phone: phoneGranted,
         contacts: contactsGranted,
+        isDefault,
       });
-
       setLoading(false);
-      return (
-        allSmsGranted && allPhoneGranted && allStorageGranted && contactsGranted
-      );
-    } catch (error) {
-      console.error("Error checking permissions:", error);
+
+      return smsGranted && phoneGranted && contactsGranted && isDefault;
+    } catch (err) {
+      console.error("Permission request failed:", err);
       setLoading(false);
       return false;
     }
   };
 
-  const showPermissionDialog = () => {
+  const showPermissionAlert = () => {
     Alert.alert(
       "Permissions Required",
-      "SimCash requires SMS and phone permissions to function properly. These permissions are needed to send and receive SMS messages through your SIM cards.",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Settings", onPress: () => {} },
-      ]
+      "SimCash requires SMS, phone, and contacts access to send and receive messages properly. Please allow these and set SimCash as your default SMS app.",
+      [{ text: "OK" }]
     );
   };
 
   useEffect(() => {
-    const checkInitialPermissions = async () => {
-      await checkPermissions();
-    };
-
-    checkInitialPermissions();
+    checkPermissions();
   }, []);
 
   return {
     permissions,
     loading,
-    requestPermissions,
     checkPermissions,
-    showPermissionDialog,
+    requestPermissions,
+    showPermissionAlert,
   };
 };

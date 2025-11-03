@@ -10,6 +10,14 @@
     "web": "expo start --web",
     "lint": "expo lint"
   },
+  "codegenConfig": {
+    "name": "SimcashModules",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.simcash"
+    }
+  },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
     "@react-navigation/bottom-tabs": "^7.4.0",

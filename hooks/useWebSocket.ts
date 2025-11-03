@@ -4,7 +4,7 @@ import * as IntentLauncher from "expo-intent-launcher";
 import * as Device from "expo-device";
 import { Platform, Alert } from "react-native";
 
-const BACKEND_URL = "https://resolved-amazing-pony.ngrok-free.app/";
+const BACKEND_URL = "http://10.50.73.172:3000/";
 
 export const useSocket = () => {
   useEffect(() => {

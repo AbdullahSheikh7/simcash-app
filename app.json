@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "frontend",
+    "name": "simcash",
     "slug": "simcash",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "frontend",
+    "scheme": "simcash",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "android": {
@@ -18,25 +18,15 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "permissions": [
-        "READ_SMS",
-        "SEND_SMS",
         "RECEIVE_SMS",
-        "READ_PHONE_STATE",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
-        "ACCESS_NETWORK_STATE",
-        "READ_PHONE_NUMBERS",
-        "READ_SMS",
         "SEND_SMS",
-        "RECEIVE_SMS",
-        "READ_PHONE_STATE",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
-        "ACCESS_NETWORK_STATE",
-        "READ_PHONE_NUMBERS",
-        "READ_CONTACTS"
+        "READ_SMS",
+        "RECEIVE_BOOT_COMPLETED",
+        "FOREGROUND_SERVICE",
+        "INTERNET",
+        "WAKE_LOCK"
       ],
-      "package": "com.abdullahs.frontend"
+      "package": "com.simcash"
     },
     "web": {
       "output": "static",
@@ -55,18 +45,6 @@
             "backgroundColor": "#000000"
           }
         }
-      ],
-      [
-        "react-native-permissions",
-        {
-          "iosPermissions": [
-            "AppTrackingTransparency",
-            "Camera",
-            "LocationWhenInUse",
-            "PhotoLibrary",
-            "Microphone"
-          ]
-        }
       ]
     ],
     "experiments": {
@@ -81,7 +59,7 @@
     },
     "owner": "areeb2345",
     "ios": {
-      "bundleIdentifier": "com.abdullahs.frontend"
+      "bundleIdentifier": "com.simcash"
     }
   }
 }

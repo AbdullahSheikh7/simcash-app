@@ -1,7 +1,7 @@
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { usePermissions } from "@/hooks/usePermissions";
 import { ReduxProvider } from "@/providers/ReduxProvider";
-import NativeLocalStorage from "@/specs/NativeLocalStorage";
+import NativeLocalStorage from "@/specs/NativeSms";
 import {
   DarkTheme,
   DefaultTheme,
@@ -42,7 +42,7 @@ export default function RootLayout() {
   // const initialRouteName = hasAllPermissions ? "(tabs)/index" : "onboarding";
 
   useEffect(() => {
-    NativeLocalStorage.sayHello("Abdullah");
+    // NativeLocalStorage.sayHello("Abdullah");
   }, []);
 
   return (

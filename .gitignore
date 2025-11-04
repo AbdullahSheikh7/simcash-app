@@ -42,4 +42,4 @@ app-example
 /ios
 /android
 
-!/android/app/src/main/java/com/simcash
+!./android/app/src/main/java/com/simcash

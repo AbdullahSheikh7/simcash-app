@@ -2,7 +2,7 @@ package com.simcash
 
 import android.content.Context
 
-import com.nativelocalstorage.NativeSmsModule
+import com.nativelocalstorage.NativeSmsSpec
 import android.content.Intent
 import android.provider.Telephony
 import android.telephony.SmsManager
@@ -15,7 +15,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.modules.core.DeviceEventManagerModule
 
-class NativeSmsModule(reactContext: ReactApplicationContext) : NativeSmsModule(reactContext) {
+class NativeSmsModule(reactContext: ReactApplicationContext) : NativeSmsSpec(reactContext) {
 
     override fun getName(): String = "SmsModule"
 
